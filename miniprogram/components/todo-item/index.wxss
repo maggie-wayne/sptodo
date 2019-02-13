@@ -1,0 +1,57 @@
+/* components/item.wxss */
+.todo-item {
+  border-bottom: 1rpx solid;
+  padding: .5em;
+}
+
+/* Overview */
+.todo-item .todo-overview {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.todo-overview .item-checkbox-group {
+  width: 2em;
+}
+
+.todo-overview .item-title {
+  flex-grow: 1;
+}
+
+.todo-overview .item-expire-date {
+  width: 160rpx;
+  font-size: 0.75em;
+}
+
+/* Detail */
+.todo-item .todo-detail {
+  margin-top: .5em;
+  padding-left: 2em;
+  background: #f7f7f7;
+}
+
+.detail-item {
+  width: 100%;
+  padding: 0.5em 0;
+  border-bottom: 1px solid #c9c9c9;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1em;
+}
+
+.create-by {
+  font-size: .75em;
+  text-align: right;
+  flex-grow: 1;
+  margin-right: 1em;
+  margin-bottom: .3em;
+}
+
+@import "../../style/commom";

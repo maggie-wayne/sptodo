@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "todo-input": "../../components/todo-input/index",
+    "todo-item": "../../components/todo-item/index",
+    "van-notify": "vant-weapp/notify/index"
+  }
+}

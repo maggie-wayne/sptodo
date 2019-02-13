@@ -1,0 +1,11 @@
+.todo-input-container {
+    padding: .5em;
+    height: 120rpx;
+}
+
+.todo-input-container input {
+    font-size: 1.7em;
+    height: 120rpx;    
+}
+
+@import '../../style/commom';

@@ -1,0 +1,23 @@
+<view>
+  <view
+    class="todo-date-picker-slot"
+    bind:tap="onShowPopup"
+  >
+    <slot></slot>
+  </view>
+
+  <!-- Popup -->
+  <van-popup
+    show="{{ showPopup }}"
+    position="top"
+    bind:close="onConfirm"
+  >
+    <van-datetime-picker
+      type="{{ pickerType }}"
+      value="{{ localValue }}"
+      bind:input="onDateChange"
+      bind:confirm="onConfirm"
+      bind:cancel="onPopupClose"
+    />
+  </van-popup>
+</view>

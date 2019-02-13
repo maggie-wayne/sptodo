@@ -1,0 +1,45 @@
+<!--index.wxml-->
+<view
+  wx:if="{{ login }}" 
+  class="container"
+>
+  <todo-input
+    class="todo-input"
+    value="{{ createTodo }}"
+    bind:confirm="onCreateTodo"
+    bind:change="onCreateChange"
+  />
+  
+  <view class="todo-list">
+    <view class="list-title subtitle-color border-botton border-color">待完成</view>
+    <todo-item
+      class="border-botton border-color"
+      wx:for="{{ todoList }}"
+      wx:if="{{ !item.isComplete }}"
+      wx:key="{{ index }}"
+      value="{{ item }}"
+      isActive="{{ active && active.id === item.id }}"
+      bind:complete="onCompleteStateChange"
+      bind:active="onActive"
+      bind:change="onTodoChange"
+      bind:delete="onDelete"
+    />
+  </view>
+
+  <view class="todo-list">
+    <view class="list-title subtitle-color border-botton border-color">已完成</view>
+    <todo-item
+      class="border-botton border-color"
+      wx:for="{{ todoList }}"
+      wx:if="{{ item.isComplete }}"
+      wx:key="{{ index }}"
+      value="{{ item }}"
+      isActive="{{ active && active.id === item.id }}"
+      bind:complete="onCompleteStateChange"
+      bind:active="onActive"
+      bind:change="onTodoChange"
+      bind:delete="onDelete"
+    />
+  </view>
+  <van-notify id="van-notify" />
+</view>

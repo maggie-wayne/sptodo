@@ -1,0 +1,9 @@
+.list-title {
+  padding: .5em;
+}
+
+.todo-input {
+  width: 100%;
+}
+
+@import "../../style/commom";

@@ -1,0 +1,21 @@
+/* miniprogram/pages/welcome/index.wxss */
+.welcome-container {
+  position: relative;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.welcome-text {
+  position: absolute;
+  font-size: 24px;
+}
+
+.start-btn {
+  position: absolute;
+}
+
+@import "../../style/commom";

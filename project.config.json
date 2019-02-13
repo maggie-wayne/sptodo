@@ -1,0 +1,16 @@
+{
+	"miniprogramRoot": "miniprogram/",
+	"cloudfunctionRoot": "cloudfunctions/",
+	"setting": {
+		"urlCheck": true,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true,
+		"autoAudits": false,
+		"nodeModules": true
+	},
+	"appid": "wxe19370fd469e0d7a",
+	"projectname": "sptodo",
+	"libVersion": "2.2.5"
+}

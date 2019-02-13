@@ -1,0 +1,9 @@
+<view class="todo-input-container border-botton border-color">
+  <input
+    wx:if="{{ value }}"
+    placeholder="添加一条待办"
+    value="{{ value.title }}"
+    bindinput="onTitleChange"
+    bind:confirm="onConfirm"
+  />
+</view>

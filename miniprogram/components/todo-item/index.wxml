@@ -1,0 +1,118 @@
+<view
+  class="todo-item border-bottom border-color"
+  style="background: {{ isActive ? '#f7f7f7' : '' }}"
+>
+  <!-- 概览 -->
+  <view
+    style="opacity:{{ value.isComplete ? '.35' : '1' }}"
+    class="todo-overview"
+  >
+    <!-- 完成状态 -->
+    <checkbox-group
+      class="item-checkbox-group"
+      bind:change="onCompleteStateChange"
+    >
+      <checkbox
+        class="item-checkbox"
+        checked="{{ value.isComplete }}"
+      />
+    </checkbox-group>
+
+    <!-- 标题 -->
+    <view
+      style="text-decoration:{{ value.isComplete ? 'line-through' : '' }}"
+      class="item-title title-color"
+      catch:tap="onActive"
+    >
+      {{ value.title }}
+    </view>
+
+    <!-- 到期日 -->
+    <view
+      wx:if="{{ !isActive && value.expireAt }}"
+      class="item-expire-date text-color"
+      catch:tap="onActive"
+    >
+      {{ overViewFormatExpireDate }}
+    </view>
+
+    <!-- 有无详情标识 -->
+    <view
+      wx:if="{{ (value.content || value.expireAt) && !isActive && !value.isLoading }}"
+      catch:tap="onActive"
+      name="arrow-down"
+      class="subtitle-color"
+    >
+    •
+    </view>
+
+    <!-- change 标识 -->
+    <view
+      wx:if="{{ value.isChange && isActive && !value.isLoading }}"
+      catch:tap="onActive"
+      name="arrow-down"
+      class="subtitle-color"
+    >
+    *
+    </view>
+
+    <!-- loading 标识 -->
+    <view
+      wx:if="{{ value.isLoading }}"
+      catch:tap="onActive"
+      name="arrow-down"
+      class="subtitle-color"
+    >
+    ...
+    </view>
+  </view>
+  
+
+  <!-- 详情 -->
+  <view
+    wx:if="{{ isActive }}"
+    class="todo-detail"
+  >
+    <!-- 到期日 -->
+    <todo-date-picker
+      value="{{ value.expireAt }}"
+      data-key="expireAt"
+      bind:change="onChange"
+    >
+      <input
+        class="detail-item"
+        placeholder="设置到期日"
+        value="{{ detailFormatExpireDate }}"
+      />
+    </todo-date-picker>
+
+    <!-- 备注 -->
+    <textarea
+      class="detail-item"
+      auto-height
+      placeholder="添加备注"
+      value="{{ value.content }}"
+      data-key="content"
+      bindinput="onChange"
+    />
+
+    <!-- 底部操作按钮与创建人创建日期 -->
+    <view
+      class="toolbar text-color"
+    >
+      <view
+        class="create-by"
+      >
+        {{ value.isComplete ? '已' : '' }}由 {{ creatorName }}
+        {{ value.isComplete ? '完成' : '创建' }}于 {{ detailFormatCreateDate }}
+      </view>
+
+      <van-icon
+        name="delete"
+        size="1.5em"
+        color="#ec544d"
+        bind:click="onDelete"
+      />
+    </view>
+  </view>
+</view>

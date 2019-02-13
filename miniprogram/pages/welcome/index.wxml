@@ -1,0 +1,19 @@
+<view class="welcome-container">
+  <view
+    wx:if="{{ textShow }}"
+    animation="{{ textAnimation }}"
+    class="welcome-text title-color"
+  >
+    Hi, 你好。
+  </view>
+
+  <button
+    wx:if="{{ btnShow }}"
+    class="start-btn"
+    open-type="getUserInfo"
+    bindgetuserinfo="onGotUserInfo"
+    animation="{{ btnAnimation }}"
+  >
+    开始使用
+  </button>
+</view>

@@ -1,0 +1,23 @@
+
+.title-color {
+  color: #262626;
+}
+
+.subtitle-color {
+  color: #595959;
+}
+
+.text-color {
+  color: #8c8c8c;
+}
+
+.border-botton {
+  border-bottom: 1rpx solid;
+}
+.border-botton:last-child {
+  /* border: none; */
+}
+
+.border-color {
+  border-color: #fafafa;
+}
