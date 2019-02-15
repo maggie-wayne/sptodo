@@ -4,13 +4,13 @@ import QuickTodo from '../../models/QuickTodo'
 import BaseTodo from '../../models/BaseTodo'
 import User from '../../models/User'
 
-const app = getApp()
 const getDefaultTodo = () => ({
   title: '',
   expireAt: null,
   content: '',
   isComplete: false
 })
+
 const indexPageData = {
   login: false,
   user: null,
@@ -26,14 +26,42 @@ Page({
     this.inital()
   },
 
-  inital() {
-    console.log('App(index): ', app)
-    console.log('Index Page: ', this)
+  onPullDownRefresh() {
+    console.log('Down refresh.')
+    this.inital4Network()
+      .then(() => {
+        wx.stopPullDownRefresh()
+      })
+  },
 
-    this.getUserInfo()
+  inital() {
+    console.log('Index Page: ', this)
+    const cache = wx.getStorageSync('cache')
+
+    if (cache) {
+      console.log('Find cache', cache)
+      this.inital4Cache(cache)
+    } else {
+      this.inital4Network()
+    }
+  },
+
+  inital4Network() {
+    return this.getUserInfo()
       .then(() => {
         this.getTodoList()
       })
+  },
+
+  inital4Cache(cache) {
+    const { login, user, active, todoList, createTodo } = cache
+    this.setData({
+      login,
+      user: new User(user),
+      active,
+      todoList: todoList.map(x => new BaseTodo(x)),
+      createTodo
+    })
   },
 
   getUserInfo() {
@@ -80,6 +108,18 @@ Page({
       ...this.data,
       ...sort && { todoList }
     })
+
+    const cache = {
+      ...this.data,
+      user: User.mapping(this.data.user),
+      todoList: this.data.todoList.map(x => BaseTodo.mapping(x))
+    }
+
+    wx.setStorage({
+      key: 'cache',
+      data: cache
+    })
+    console.log('Update data and caching.', cache)
   },
 
   // 获取 Todo list
@@ -205,7 +245,10 @@ Page({
     this.data.active = active && active.id === id 
       ? null 
       : target
-    this.updateData(false)
+
+    this.setData({
+      active: this.data.active
+    })
   },
 
   // Todo change
@@ -216,7 +259,10 @@ Page({
     todo = BaseTodo.mapping(todo)
     target.updateByMeta(todo)
     target.isChange = true
-    this.updateData(false)
+
+    this.setData({
+      todoList: this.data.todoList
+    })
   },
 
   // Delete
@@ -226,7 +272,9 @@ Page({
     const target = this.data.todoList[index]
 
     this.data.todoList.splice(index, 1)
-    this.updateData(false)
+    this.setData({
+      todoList: this.data.todoList
+    })
 
     target.delete()
       .then(res => {
@@ -234,8 +282,6 @@ Page({
       })
       .catch(e => {
         this.data.todoList.push(target)
-      })
-      .then(() => {
         this.updateData()
       })
   }

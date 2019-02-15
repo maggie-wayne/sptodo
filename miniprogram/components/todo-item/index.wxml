@@ -6,6 +6,7 @@
   <view
     style="opacity:{{ value.isComplete ? '.35' : '1' }}"
     class="todo-overview"
+    catch:tap="onActive"
   >
     <!-- 完成状态 -->
     <checkbox-group
@@ -22,24 +23,13 @@
     <view
       style="text-decoration:{{ value.isComplete ? 'line-through' : '' }}"
       class="item-title title-color"
-      catch:tap="onActive"
     >
       {{ value.title }}
-    </view>
-
-    <!-- 到期日 -->
-    <view
-      wx:if="{{ !isActive && value.expireAt }}"
-      class="item-expire-date text-color"
-      catch:tap="onActive"
-    >
-      {{ overViewFormatExpireDate }}
     </view>
 
     <!-- 有无详情标识 -->
     <view
       wx:if="{{ (value.content || value.expireAt) && !isActive && !value.isLoading }}"
-      catch:tap="onActive"
       name="arrow-down"
       class="subtitle-color"
     >
@@ -49,7 +39,6 @@
     <!-- change 标识 -->
     <view
       wx:if="{{ value.isChange && isActive && !value.isLoading }}"
-      catch:tap="onActive"
       name="arrow-down"
       class="subtitle-color"
     >
@@ -59,7 +48,6 @@
     <!-- loading 标识 -->
     <view
       wx:if="{{ value.isLoading }}"
-      catch:tap="onActive"
       name="arrow-down"
       class="subtitle-color"
     >
@@ -79,22 +67,32 @@
       data-key="expireAt"
       bind:change="onChange"
     >
-      <input
+      <view
         class="detail-item"
-        placeholder="设置到期日"
-        value="{{ detailFormatExpireDate }}"
-      />
+      >
+        {{ detailFormatExpireDate || '设置到期日' }}
+      </view>
     </todo-date-picker>
 
     <!-- 备注 -->
     <textarea
+      wx:if="{{ isActive && isInputContent }}"
       class="detail-item"
       auto-height
       placeholder="添加备注"
       value="{{ value.content }}"
       data-key="content"
       bindinput="onChange"
+      bindblur="toggelInputContent"
+      focus
     />
+    <view
+      class="detail-item"
+      wx:if="{{ isActive && !isInputContent }}"
+      bind:tap="toggelInputContent"
+    >
+      {{ value.content || '添加备注' }}
+    </view>
 
     <!-- 底部操作按钮与创建人创建日期 -->
     <view

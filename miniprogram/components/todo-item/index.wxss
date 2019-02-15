@@ -1,7 +1,6 @@
 /* components/item.wxss */
 .todo-item {
   border-bottom: 1rpx solid;
-  padding: .5em;
 }
 
 /* Overview */
@@ -10,6 +9,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding: .5em;
 }
 
 .todo-overview .item-checkbox-group {
@@ -30,6 +30,7 @@
   margin-top: .5em;
   padding-left: 2em;
   background: #f7f7f7;
+  padding: 0 .5em .5em .5em;
 }
 
 .detail-item {

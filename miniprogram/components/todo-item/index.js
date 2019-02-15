@@ -23,7 +23,8 @@ Component({
     data: {
         detailFormatExpireDate: '',
         detailFormatCreateDate: '',
-        creatorName: ''
+        creatorName: '',
+        isInputContent: false
     },
 
     methods: {
@@ -55,6 +56,12 @@ Component({
         onDelete() {
             const id = this.properties.value.id
             this.triggerEvent('delete', { id })
+        },
+
+        toggelInputContent () {
+            this.setData({
+                isInputContent: !this.data.isInputContent
+            })
         },
 
         // 日期格式化

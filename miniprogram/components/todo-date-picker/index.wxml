@@ -10,7 +10,7 @@
   <van-popup
     show="{{ showPopup }}"
     position="top"
-    bind:close="onConfirm"
+    bind:close="onPopupClose"
   >
     <van-datetime-picker
       type="{{ pickerType }}"
