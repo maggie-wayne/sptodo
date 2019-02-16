@@ -192,6 +192,10 @@ Page({
     target.isComplete = !completeState
     target.lastModify = new Date().getTime()
     target.isLoading = true
+
+    if (this.data.active && this.data.active.id === id) {
+      this.data.active = null
+    }
     this.updateData()
 
     // 发起请求修改数据
