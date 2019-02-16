@@ -3,6 +3,7 @@ import adapter from '../../adapters/index'
 import QuickTodo from '../../models/QuickTodo'
 import BaseTodo from '../../models/BaseTodo'
 import User from '../../models/User'
+import regeneratorRuntime from '../../utils/runtime'
 
 const getDefaultTodo = () => ({
   title: '',
@@ -22,79 +23,110 @@ const indexPageData = {
 Page({
   data: indexPageData,
 
-  onLoad() {
-    this.inital()
+  async onLoad() {
+    console.log('Start inital ...')
+    const result = await this.inital()
+    console.log(`Inital ${result ? 'done' : 'fail'}`)
   },
 
-  onPullDownRefresh() {
+  async onPullDownRefresh() {
     console.log('Down refresh.')
-    this.inital4Network()
-      .then(() => {
-        wx.stopPullDownRefresh()
-      })
+    await this.networkInital()
+    wx.stopPullDownRefresh()
   },
 
   inital() {
-    console.log('Index Page: ', this)
+    console.log('Inital index Page: ', this)
     const cache = wx.getStorageSync('cache')
 
     if (cache) {
       console.log('Find cache', cache)
-      this.inital4Cache(cache)
+      return this.cacheInital(cache)
     } else {
-      this.inital4Network()
+      console.log('Not find cache, inital from network.')
+      return this.networkInital()
     }
   },
 
-  inital4Network() {
-    return this.getUserInfo()
-      .then(() => {
-        this.getTodoList()
-      })
-  },
-
-  inital4Cache(cache) {
+  cacheInital(cache) {
     const { login, user, active, todoList, createTodo } = cache
-    this.setData({
+    const data = {
       login,
       user: new User(user),
       active,
       todoList: todoList.map(x => new BaseTodo(x)),
       createTodo
+    }
+
+    adapter.login(user)
+    this.setData(data)
+    return true
+  },
+
+  async networkInital() {
+    console.log('Inital userinfo ...')
+    const userInfoMeta = await this.initalUser()
+    if (!userInfoMeta) return false
+
+    console.log('Userinfo:', userInfoMeta)
+    this.data.login = true
+    this.data.user = new User(userInfoMeta)
+    adapter.login(userInfoMeta)
+
+    console.log('Inital todolist ...')
+    await this.initalTodolist()
+    this.updateData()
+    return true
+  },
+
+  async initalUser() {
+    const result = await this.checkUserInfoPermission()
+
+    if (result) {
+      // 有权限，获取 UserInfo
+      console.log('Have userinfo permission')
+      return this.getUserInfo()
+    } else {
+      // 无权限，跳转 Welcome 页面
+      console.log('Not have userinfo permission.')
+      wx.redirectTo({
+        url: '/pages/welcome/index'
+      })
+      return false
+    }
+  },
+
+  checkUserInfoPermission() {
+    return new Promise((resolve, reject) => {
+      wx.getSetting({
+        success: res => {
+          resolve(res.authSetting['scope.userInfo'])
+        }
+      })
     })
   },
 
   getUserInfo() {
     return new Promise((resolve, reject) => {
-      // 获取设置
-      wx.getSetting({
+      wx.getUserInfo({
         success: res => {
-          if (res.authSetting['scope.userInfo']) {
-            // 有 userInfo 权限
-            wx.getUserInfo({
-              success: res => {
-                const userInfoMeta = User.mapping(res.userInfo)
-                adapter.login(userInfoMeta)
-                this.setData({
-                  login: true,
-                  user: new User(userInfoMeta)
-                })
-                resolve()
-              }
-            })
-          }
-          // 无 userInfo 权限 - 跳转到欢迎页面
-          else {
-            reject({
-              msg: ''
-            })
-            wx.redirectTo({
-              url: '/pages/welcome/index'
-            })
-          }
+          resolve(User.mapping(res.userInfo))
         }
       })
     })
+  },
+
+  async initalTodolist() {
+    const res = await adapter.getTodoList()
+    const { users, list } = res.result
+
+    console.log('Todolist:', res.result)
+    const hasUserInfoTodlList = list.map(x => {
+      const _openid = x._openid
+      x.creator = users.find(x => x._openid === _openid)
+      return x
+    })
+    this.data.todoList = this.sortTodoList(hasUserInfoTodlList).map(x => new BaseTodo(x))
   },
 
   sortTodoList(list) {
@@ -120,23 +152,6 @@ Page({
       data: cache
     })
     console.log('Update data and caching.', cache)
-  },
-
-  // 获取 Todo list
-  getTodoList() {
-    adapter.getTodoList()
-      .then(res => {
-        const hasUserInfoTodlList = res.result.list.map(x => {
-            const _openid = x._openid
-            x.creator = res.result.users.find(x => x._openid === _openid)
-            return x
-          })
-        this.data.todoList = this.sortTodoList(hasUserInfoTodlList).map(x => new BaseTodo(x))
-        this.updateData()
-      })
-      .catch(e => {
-        Notify(e.msg)
-      })
   },
 
   // Todo input 内容 change
@@ -192,12 +207,17 @@ Page({
     target.isComplete = !completeState
     target.lastModify = new Date().getTime()
     target.isLoading = true
+
+    if (this.data.active && this.data.active.id === id) {
+      this.data.active = null
+    }
     this.updateData()
 
     // 发起请求修改数据
     target.update()
       .then(res => {
         // 成功 - 更新数据
+        console.log(res)
         target.updateByMeta(res.result)
       })
       .catch(e => {
@@ -242,12 +262,10 @@ Page({
 
     // toggle
     const target = this.data.todoList.find(x => x.id === id)
-    this.data.active = active && active.id === id 
-      ? null 
-      : target
-
     this.setData({
-      active: this.data.active
+      active: active && active.id === id
+        ? null
+        : target
     })
   },
 

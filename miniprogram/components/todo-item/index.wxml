@@ -9,15 +9,19 @@
     catch:tap="onActive"
   >
     <!-- 完成状态 -->
-    <checkbox-group
-      class="item-checkbox-group"
-      bind:change="onCompleteStateChange"
+    <view
+      catch:tap="nothing"
     >
-      <checkbox
-        class="item-checkbox"
-        checked="{{ value.isComplete }}"
-      />
-    </checkbox-group>
+      <checkbox-group
+        class="item-checkbox-group"
+        bind:change="onCompleteStateChange"
+      >
+        <checkbox
+          class="item-checkbox"
+          checked="{{ value.isComplete }}"
+        />
+      </checkbox-group>
+    </view>
 
     <!-- 标题 -->
     <view
