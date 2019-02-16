@@ -64,6 +64,10 @@ Component({
             })
         },
 
+        nothing() {
+
+        },
+
         // 日期格式化
         formatDate(date, tmp) {
             if (!date) return ''
