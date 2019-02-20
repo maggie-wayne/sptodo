@@ -1,6 +1,13 @@
 {
+  "name": "sptodo",
+  "description": "Wechat mini-program.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maggie-wayne/sptodo"
+  },
   "dependencies": {
-    "dayjs": "^1.8.0",
-    "vant-weapp": "^0.5.2"
-  }
+    "dayjs": "1.8.0",
+    "vant-weapp": "0.5.4"
+  },
+  "license": "MIT"
 }
