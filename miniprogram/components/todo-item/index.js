@@ -9,6 +9,7 @@ Component({
                 this.setData({
                     detailFormatExpireDate: this.formatDate(newVal.expireAt),
                     detailFormatCreateDate: this.formatDate(newVal.createAt),
+                    detailCompleteDate: this.formatDate(newVal.completeAt),
                     creatorName: newVal.creator.nickName
                 })
             }
@@ -23,6 +24,7 @@ Component({
     data: {
         detailFormatExpireDate: '',
         detailFormatCreateDate: '',
+        detailCompleteDate:'',
         creatorName: '',
         isInputContent: false
     },
