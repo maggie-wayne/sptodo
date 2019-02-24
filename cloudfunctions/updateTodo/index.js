@@ -8,7 +8,7 @@ exports.main = async (event, context) => {
   const now = new Date().getTime()
   
   todo.last_modify = now
-  todo.completeAt = now
+  todo.complete_at = now
   delete todo._id
   delete todo._openid
 

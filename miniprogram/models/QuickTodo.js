@@ -9,6 +9,7 @@ class QuickTodo {
         this.isComplete = meta.is_complete
         this.creator = meta.creator
         this.lastModify = new Date().getTime()
+        this.completeAt = meta.completeAt;
     }
 
     static mapping(source) {
