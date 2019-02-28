@@ -55,4 +55,10 @@
   margin-bottom: .3em;
 }
 
+.preventDefault{
+  pointer-events: none;
+  color: #c0c4cc;
+  cursor: not-allowed;
+}
+
 @import "../../style/commom";

@@ -5,7 +5,7 @@
   <!-- 概览 -->
   <view
     style="opacity:{{ value.isComplete ? '.35' : '1' }}"
-    class="todo-overview"
+    class="todo-overview {{value.isLoading ? 'preventDefault':''}}"
     catch:tap="onActive"
   >
     <!-- 完成状态 -->
