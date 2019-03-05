@@ -31,7 +31,7 @@
       {{ value.title }}
     </view>
 
-    <!-- 有无详情标识 -->
+  <!-- 有无详情标识 -->
     <view
       wx:if="{{ (value.content || value.expireAt) && !isActive && !value.isLoading }}"
       name="arrow-down"
@@ -105,7 +105,7 @@
       <view
         class="create-by"
       >
-        {{ value.isComplete ? '已' : '' }}由 {{ creatorName }}
+        {{ value.isComplete ? '已' : '' }}由 {{ creator.nickName }}
         {{ value.isComplete ? '完成' : '创建' }}于 {{ value.isComplete ? detailCompleteDate: detailFormatCreateDate }}
       </view>
 

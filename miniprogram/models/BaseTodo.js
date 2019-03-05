@@ -9,7 +9,7 @@ class BaseTodo extends QuickTodo {
         this.openId = meta._openid
         this.createAt = meta.create_at
         this.lastModify = meta.last_modify
-        this.creator = new User(meta.creator)
+        // this.creator = new User(meta.creator)
 
         this.isChange = false
         this.isLoading = false
@@ -44,8 +44,7 @@ class BaseTodo extends QuickTodo {
             is_complete: isComplete,
             complete_at: completeAt,
             title: title,
-            content: content,
-            creator: User.mapping(creator)
+            content: content
         }
     }
 

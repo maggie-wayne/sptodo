@@ -18,6 +18,10 @@
 
 .todo-overview .item-title {
   flex-grow: 1;
+  word-wrap:break-word;
+  word-break: break-all;
+  width:100%;
+  overflow: hidden
 }
 
 .todo-overview .item-expire-date {
