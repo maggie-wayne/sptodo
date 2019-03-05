@@ -10,11 +10,17 @@ Component({
                     detailFormatExpireDate: this.formatDate(newVal.expireAt),
                     detailFormatCreateDate: this.formatDate(newVal.createAt),
                     detailCompleteDate: this.formatDate(newVal.completeAt),
-                    creatorName: newVal.creator.nickName
+                    creator: this.data.users.find(x => x._openid === newVal.openId) || {}
                 })
             }
         },
-
+        users: {
+          type: Array,
+          value: [],
+          observer: function(newVal){
+            console.log(newVal)
+          }
+        },
         isActive: {
             type: Boolean,
             value: false
@@ -25,7 +31,7 @@ Component({
         detailFormatExpireDate: '',
         detailFormatCreateDate: '',
         detailCompleteDate:'',
-        creatorName: '',
+        creator: {},
         isInputContent: false
     },
 

@@ -105,7 +105,7 @@
       <view
         class="create-by"
       >
-        {{ value.isComplete ? '已' : '' }}由 {{ creatorName }}
+        {{ value.isComplete ? '已' : '' }}由 {{ creator.nick_name }}
         {{ value.isComplete ? '完成' : '创建' }}于 {{ value.isComplete ? detailCompleteDate: detailFormatCreateDate }}
       </view>
 

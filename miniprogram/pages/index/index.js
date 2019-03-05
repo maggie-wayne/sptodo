@@ -17,6 +17,8 @@ const indexPageData = {
   user: null,
   active: null,
   todoList: [],
+  currentUser: {},
+  userList: [],
   createTodo: getDefaultTodo()
 }
 
@@ -31,7 +33,7 @@ Page({
 
   async onPullDownRefresh() {
     console.log('Down refresh.')
-    await this.networkInital()
+    await this.networkInital();
     wx.stopPullDownRefresh()
   },
 
@@ -49,16 +51,17 @@ Page({
   },
 
   cacheInital(cache) {
-    const { login, user, active, todoList, createTodo } = cache
+    const { login, currentUser, active, todoList, createTodo, userList } = cache
     const data = {
       login,
-      user: new User(user),
+      currentUser: new User(currentUser),
+      userList,
       active,
       todoList: todoList.map(x => new BaseTodo(x)),
       createTodo
     }
 
-    adapter.login(user)
+    adapter.login(currentUser)
     this.setData(data)
     return true
   },
@@ -70,7 +73,7 @@ Page({
 
     console.log('Userinfo:', userInfoMeta)
     this.data.login = true
-    this.data.user = new User(userInfoMeta)
+    this.data.currentUser = new User(userInfoMeta)
     adapter.login(userInfoMeta)
 
     console.log('Inital todolist ...')
@@ -119,14 +122,14 @@ Page({
   async initalTodolist() {
     const res = await adapter.getTodoList()
     const { users, list } = res.result
-
+    this.data.userList = users;
     console.log('Todolist:', res.result)
-    const hasUserInfoTodlList = list.map(x => {
-      const _openid = x._openid
-      x.creator = users.find(x => x._openid === _openid)
-      return x
-    })
-    this.data.todoList = this.sortTodoList(hasUserInfoTodlList).map(x => new BaseTodo(x))
+    // const hasUserInfoTodlList = list.map(x => {
+    //   const _openid = x._openid
+    //   x.creator = users.find(x => x._openid === _openid)
+    //   return x
+    // })
+    this.data.todoList = this.sortTodoList(list).map(x => new BaseTodo(x))
   },
 
   sortTodoList(list) {
@@ -143,7 +146,8 @@ Page({
 
     const cache = {
       ...this.data,
-      user: User.mapping(this.data.user),
+      currentUser: User.mapping(this.data.currentUser),
+      userList: this.data.userList,
       todoList: this.data.todoList.map(x => BaseTodo.mapping(x))
     }
 
@@ -164,7 +168,7 @@ Page({
   // 创建 Todo
   onCreateTodo() {
     const todo = this.data.createTodo
-    todo.creator = this.data.user
+    // todo.creator = this.data.user
 
     const quickTodo = new QuickTodo(QuickTodo.mapping(todo))
     const tag = quickTodo.lastModify
@@ -179,7 +183,7 @@ Page({
     quickTodo.create()
       .then(res => {
         // 创建成功 - 更新本地数据
-        res.result.creator = User.mapping(this.data.user)
+        // res.result.creator = User.mapping(this.data.user)
 
         const index = this.data.todoList.findIndex(x => x.lastModify === tag)
         const baseTodo = new BaseTodo(res.result)
