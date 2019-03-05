@@ -10,16 +10,13 @@ Component({
                     detailFormatExpireDate: this.formatDate(newVal.expireAt),
                     detailFormatCreateDate: this.formatDate(newVal.createAt),
                     detailCompleteDate: this.formatDate(newVal.completeAt),
-                    creator: this.data.users.find(x => x._openid === newVal.openId) || {}
+                    creator: this.data.users.find(x => x.openId === newVal.openId) || {}
                 })
             }
         },
         users: {
           type: Array,
-          value: [],
-          observer: function(newVal){
-            console.log(newVal)
-          }
+          value: []
         },
         isActive: {
             type: Boolean,

@@ -122,13 +122,8 @@ Page({
   async initalTodolist() {
     const res = await adapter.getTodoList()
     const { users, list } = res.result
-    this.data.userList = users;
+    this.data.userList = users.length ? new User(users) : [this.data.currentUser]
     console.log('Todolist:', res.result)
-    // const hasUserInfoTodlList = list.map(x => {
-    //   const _openid = x._openid
-    //   x.creator = users.find(x => x._openid === _openid)
-    //   return x
-    // })
     this.data.todoList = this.sortTodoList(list).map(x => new BaseTodo(x))
   },
 
@@ -184,7 +179,7 @@ Page({
       .then(res => {
         // 创建成功 - 更新本地数据
         // res.result.creator = User.mapping(this.data.user)
-
+        !this.data.currentUser.openId && (this.data.currentUser.openId = res.result._openid)
         const index = this.data.todoList.findIndex(x => x.lastModify === tag)
         const baseTodo = new BaseTodo(res.result)
         this.data.todoList.splice(index, 1, baseTodo)
